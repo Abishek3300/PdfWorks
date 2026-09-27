@@ -54,6 +54,50 @@ fn clean_pdf() -> Vec<u8> {
     buf
 }
 
+/// A valid one-page PDF whose serialized size exceeds 2 MB, so the whole upload
+/// is larger than Axum's historical 2 MB `DefaultBodyLimit`. The bulk is a
+/// legitimate page content stream (~3 MB of drawing-comment bytes) referenced
+/// by the page, so the document stays well-formed and passes content typing +
+/// structural validation — unlike trailing junk, which the Validator rejects.
+fn large_pdf() -> Vec<u8> {
+    let mut doc = lopdf::Document::with_version("1.5");
+    let pages_id = doc.new_object_id();
+
+    // A ~3 MB content stream. `%` starts a PDF comment inside the stream, so the
+    // padding is valid page-content that renders to nothing.
+    let mut content = Vec::with_capacity(3_000_050);
+    content.extend_from_slice(b"% ");
+    content.extend(std::iter::repeat(b'x').take(3_000_000));
+    content.extend_from_slice(b"\n");
+    let content_id = doc.add_object(lopdf::Object::Stream(lopdf::Stream::new(
+        dictionary! {},
+        content,
+    )));
+
+    let page_id = doc.add_object(dictionary! {
+        "Type" => "Page",
+        "Parent" => pages_id,
+        "MediaBox" => vec![0.into(), 0.into(), 612.into(), 792.into()],
+        "Contents" => content_id,
+    });
+    doc.objects.insert(
+        pages_id,
+        lopdf::Object::Dictionary(dictionary! {
+            "Type" => "Pages",
+            "Kids" => vec![lopdf::Object::Reference(page_id)],
+            "Count" => 1_i64,
+        }),
+    );
+    let catalog = doc.add_object(dictionary! {
+        "Type" => "Catalog",
+        "Pages" => pages_id,
+    });
+    doc.trailer.set("Root", catalog);
+    let mut buf = Vec::new();
+    doc.save_to(&mut buf).unwrap();
+    buf
+}
+
 /// Build a `multipart/form-data` body for the intake with `tool`, `options`,
 /// and one `files` part carrying `pdf`.
 fn multipart_body(tool: &str, options: &str, filename: &str, pdf: &[u8]) -> (String, Vec<u8>) {
@@ -213,6 +257,60 @@ async fn submit_status_and_download_end_to_end() {
     );
     let out_bytes = resp.into_body().collect().await.unwrap().to_bytes();
     assert!(out_bytes.starts_with(b"%PDF-"), "the output is a PDF");
+}
+
+/// Regression (Req 39.2): an upload larger than Axum's historical 2 MB
+/// `DefaultBodyLimit` is accepted — the multipart body is read and the Job is
+/// created (201), rather than rejected with 400 "could not read an upload
+/// field" or 413 payload-too-large. The router raises the body limit to the
+/// app's configured maximum so the Validator alone governs size.
+#[tokio::test]
+async fn upload_larger_than_2mb_is_accepted() {
+    let app = router();
+
+    let pdf = large_pdf();
+    assert!(
+        pdf.len() > 2 * 1024 * 1024,
+        "the padded PDF must exceed the old 2 MB default"
+    );
+
+    let (content_type, body) = multipart_body(
+        "OptimizePdf",
+        r#"{"Optimize":{"level":"Medium"}}"#,
+        "big.pdf",
+        &pdf,
+    );
+
+    let resp = app
+        .oneshot(
+            Request::builder()
+                .method("POST")
+                .uri("/api/jobs")
+                .header("content-type", content_type)
+                .body(Body::from(body))
+                .unwrap(),
+        )
+        .await
+        .expect("intake response");
+
+    let status = resp.status();
+    // The multipart must be parsed: never a body-read 400 nor a 413.
+    assert_ne!(
+        status,
+        StatusCode::BAD_REQUEST,
+        "an >2 MB upload must not fail multipart parsing (Req 39.2)"
+    );
+    assert_ne!(
+        status,
+        StatusCode::PAYLOAD_TOO_LARGE,
+        "an >2 MB upload is within Max_File_Size and must not be rejected"
+    );
+    // The padded-but-valid PDF should be accepted and a Job created.
+    assert_eq!(
+        status,
+        StatusCode::CREATED,
+        "an >2 MB valid PDF upload should create a Job (201)"
+    );
 }
 
 /// A status request without the Job_Token is denied (Req 43.3).

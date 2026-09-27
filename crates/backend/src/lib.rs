@@ -56,6 +56,7 @@ pub mod validator;
 
 use std::sync::Arc;
 
+use axum::extract::DefaultBodyLimit;
 use axum::extract::State;
 use axum::http::{HeaderMap, StatusCode};
 use axum::middleware::{self, Next};
@@ -110,6 +111,9 @@ pub fn build_router(state: Arc<AppState>) -> Router {
             state.clone(),
             security_gateway_layer,
         ))
+        // Raise Axum's 2 MB default so uploads up to Max_File_Size are accepted;
+        // the app enforces its own size limits in the Validator (Req 39.2).
+        .layer(DefaultBodyLimit::max(MAX_REQUEST_BODY_BYTES as usize))
         .with_state(state)
 }
 
