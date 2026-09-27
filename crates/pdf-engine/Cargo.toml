@@ -1,0 +1,49 @@
+[package]
+name = "pdf-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Shared, I/O-free PDF processing engine compiled to both wasm32-unknown-unknown (browser) and native (server)."
+license = "MIT OR Apache-2.0"
+
+[lib]
+# `cdylib` is required for the wasm32 target (WASM binding layer, Task 7);
+# `rlib` lets the native backend depend on the engine directly.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# IMPORTANT: keep this crate free of I/O and native-only dependencies so it
+# stays WASM-compatible. Only pure, portable crates belong here.
+serde = { workspace = true }
+thiserror = { workspace = true }
+# Pure-Rust PDF read/write foundation shared by the page-algebra tools. Kept
+# WASM-compatible (default features disabled: no native-only rayon/system-clock).
+lopdf = { workspace = true }
+# Pure-Rust JPEG decoder (dimensions + pixels) for JPG -> PDF (Task 3.3).
+jpeg-decoder = { workspace = true }
+# Pure-Rust CommonMark parser for Markdown <-> PDF (Task 3.7).
+pulldown-cmark = { workspace = true }
+# Pure-Rust JPEG encoder for the in-engine PDF -> JPG raster path (Task 3.3).
+jpeg-encoder = { workspace = true }
+# Cryptographically secure entropy for the Job_Token generator (Task 6.6,
+# Req 43.1, 43.2). Backend selected per target in .cargo/config.toml
+# (wasm_js on wasm32, rdrand on windows-gnu); no native-only RNG dependency.
+getrandom = { workspace = true }
+
+# On wasm32, lopdf's transitive `getrandom` needs a browser entropy backend.
+# This target-specific line enables it only for wasm and never affects native.
+# The WASM binding layer (src/wasm.rs, Task 7.1) also lives here so wasm-bindgen
+# and serde-wasm-bindgen are pulled in ONLY for the browser target and never
+# affect the native build or `cargo test -p pdf-engine` (Req 37.5, 47.1).
+[target.'cfg(target_family = "wasm")'.dependencies]
+lopdf = { workspace = true, features = ["wasm_js"] }
+wasm-bindgen = { workspace = true }
+js-sys = { workspace = true }
+# Deserialize the tool id + options JSON payload inside the wasm entry point.
+serde_json = { workspace = true }
+
+[dev-dependencies]
+# Property-based tests for the engine's page-algebra invariants (Properties 1-6).
+proptest = { workspace = true }
+
+[features]
+default = []
