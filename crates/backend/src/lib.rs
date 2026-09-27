@@ -142,6 +142,34 @@ async fn security_gateway_layer(
         }
     };
 
+    // Short-circuit a CORS preflight (Req 50.3). A browser sends
+    // `OPTIONS` carrying `Access-Control-Request-Method` before the actual
+    // cross-origin request; the router has no OPTIONS route, so letting it fall
+    // through returns 405 without the Access-Control-Allow-* headers and the
+    // browser blocks the real request. From an allowed origin we answer the
+    // preflight directly with 204 and the already-built CORS headers (plus a
+    // Max-Age so the browser caches the decision). A preflight from a
+    // disallowed origin never reaches here — it was rejected with 403 above,
+    // which correctly makes the browser block the request. Preflights carry no
+    // body and must not be throttled, so this runs before the body-size check
+    // and the rate limiter.
+    if is_cors_preflight(&request, &headers) {
+        let mut resp = StatusCode::NO_CONTENT.into_response();
+        // Attach the CORS headers plus the preflight cache duration and the
+        // standard security headers (harmless on a 204).
+        for (name, value) in gateway::security_headers() {
+            resp.headers_mut().insert(name, value);
+        }
+        for (name, value) in &cors {
+            resp.headers_mut().insert(name.clone(), value.clone());
+        }
+        resp.headers_mut().insert(
+            axum::http::header::ACCESS_CONTROL_MAX_AGE,
+            axum::http::header::HeaderValue::from_static("600"),
+        );
+        return resp;
+    }
+
     // Enforce the maximum request body size from the declared Content-Length
     // before the body is read, bounding an oversized upload (Req 42.4). The
     // multipart extractor additionally bounds each streamed field.
@@ -223,6 +251,14 @@ fn content_length(headers: &HeaderMap) -> Option<u64> {
 /// Whether a request is a Job submission (`POST /api/jobs`) for rate-limiting.
 fn is_job_submission(request: &axum::extract::Request) -> bool {
     request.method() == axum::http::Method::POST && request.uri().path() == "/api/jobs"
+}
+
+/// Whether a request is a CORS preflight: an `OPTIONS` request carrying the
+/// `Access-Control-Request-Method` header the browser adds before an actual
+/// cross-origin request (Req 50.3).
+fn is_cors_preflight(request: &axum::extract::Request, headers: &HeaderMap) -> bool {
+    request.method() == axum::http::Method::OPTIONS
+        && headers.contains_key(axum::http::header::ACCESS_CONTROL_REQUEST_METHOD)
 }
 
 /// Current wall-clock time in milliseconds since the Unix epoch.

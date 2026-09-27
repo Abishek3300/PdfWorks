@@ -119,6 +119,72 @@ async fn same_origin_request_without_origin_is_allowed() {
     assert_eq!(resp.status(), StatusCode::OK);
 }
 
+/// A CORS preflight: `OPTIONS` with an Origin + `Access-Control-Request-Method`.
+fn preflight(origin: &str) -> Request<Body> {
+    Request::builder()
+        .uri("/api/jobs")
+        .method("OPTIONS")
+        .header("origin", origin)
+        .header("access-control-request-method", "POST")
+        .header("access-control-request-headers", "content-type, x-job-token")
+        .body(Body::empty())
+        .expect("build preflight request")
+}
+
+#[tokio::test]
+async fn cors_preflight_from_allowed_origin_is_answered() {
+    // The router has no OPTIONS route; the gateway must answer the preflight
+    // itself with the Access-Control-Allow-* headers so the browser proceeds
+    // with the actual POST /api/jobs (Req 50.3).
+    let resp = router()
+        .oneshot(preflight("https://app.example"))
+        .await
+        .expect("response");
+
+    // 204 No Content (or 200) with the allow headers present.
+    assert!(
+        resp.status() == StatusCode::NO_CONTENT || resp.status() == StatusCode::OK,
+        "preflight status: {}",
+        resp.status()
+    );
+    let h = resp.headers();
+    assert_eq!(
+        h.get("access-control-allow-origin")
+            .and_then(|v| v.to_str().ok()),
+        Some("https://app.example")
+    );
+    let methods = h
+        .get("access-control-allow-methods")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or_default();
+    assert!(methods.contains("POST"), "allow-methods: {methods}");
+    let allow_headers = h
+        .get("access-control-allow-headers")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or_default();
+    assert!(
+        allow_headers.contains("content-type") && allow_headers.contains("x-job-token"),
+        "allow-headers: {allow_headers}"
+    );
+    // Preflight caching hint is present.
+    assert!(h.get("access-control-max-age").is_some());
+}
+
+#[tokio::test]
+async fn cors_preflight_from_disallowed_origin_is_rejected() {
+    // A preflight from a non-allowlisted Origin is rejected with 403 and no
+    // allow header, which correctly makes the browser block the request.
+    let resp = router()
+        .oneshot(preflight("https://evil.example"))
+        .await
+        .expect("response");
+    assert_eq!(resp.status(), StatusCode::FORBIDDEN);
+    assert!(resp
+        .headers()
+        .get("access-control-allow-origin")
+        .is_none());
+}
+
 // -------------------------------------------------------------------------
 // Secure cookie attributes (Req 38.7).
 // -------------------------------------------------------------------------
