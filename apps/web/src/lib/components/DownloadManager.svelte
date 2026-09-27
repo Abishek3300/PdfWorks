@@ -55,10 +55,7 @@
 				</button>
 			</div>
 		{:else}
-			<div class="all-row">
-				<span>{outputs.length} files produced</span>
-				<button class="btn btn--download" on:click={all}>Download all (ZIP)</button>
-			</div>
+			<p class="out-count">{outputs.length} files produced</p>
 
 			<ul class="out-list">
 				{#each outputs as file, i (i)}
@@ -156,6 +153,12 @@
 		font-size: 1.05rem;
 		padding: 0.8rem 2rem;
 	}
+	.out-count {
+		color: var(--ink-soft);
+		font-size: 0.9rem;
+		margin: 0 0 0.75rem;
+		text-align: center;
+	}
 	.out-list {
 		list-style: none;
 		margin: 0;
@@ -167,6 +170,7 @@
 	.out-row {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 0.5rem;
 		padding: 0.6rem 0.75rem;
 		border: 1px solid var(--border);
