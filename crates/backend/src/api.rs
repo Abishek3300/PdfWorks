@@ -47,7 +47,7 @@
 use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use axum::extract::{Multipart, Path, State};
+use axum::extract::{DefaultBodyLimit, Multipart, Path, State};
 use axum::http::{HeaderMap, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::Json;
@@ -55,7 +55,7 @@ use serde::Serialize;
 
 use pdf_engine::{ToolId, ToolOptions};
 
-use crate::config::Config;
+use crate::config::{Config, MAX_REQUEST_BODY_BYTES};
 use crate::convert::{Converter, FakeConverter, SoffConverter};
 use crate::error::ApiError;
 use crate::jobs::{self, UploadedFile};
@@ -706,6 +706,13 @@ pub fn api_routes() -> axum::Router<Arc<crate::AppState>> {
             "/api/jobs/:jobId/outputs/:index",
             get(job_output_handler),
         )
+        // Raise Axum's 2 MB default here — on the API routes router — so uploads
+        // up to Max_File_Size stream through the Multipart extractor correctly
+        // (Req 39.2). Applied on the routes (not the outer router) so it wraps
+        // the body handling without disrupting the streamed request body on a
+        // live socket; the app still enforces its own size limits in the
+        // Validator.
+        .layer(DefaultBodyLimit::max(MAX_REQUEST_BODY_BYTES as usize))
 }
 
 #[cfg(test)]
