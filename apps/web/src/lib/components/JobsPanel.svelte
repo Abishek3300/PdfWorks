@@ -5,7 +5,7 @@
 	// User running several tools in one session sees every job's progress.
 
 	import { jobs, removeJob, type JobRecord } from '$lib/stores/jobs';
-	import { fileIcon } from '$lib/util/format';
+	import FileIcon from '$lib/components/FileIcon.svelte';
 	import { downloadOutput, downloadZip } from '$lib/util/download';
 
 	function phaseLabel(job: JobRecord): string {
@@ -57,7 +57,7 @@
 							<ul class="job-file-list">
 								{#each job.sourceNames as name}
 									<li class="job-file">
-										<span class="file-ico" aria-hidden="true">{fileIcon(name)}</span>
+										<FileIcon name={name} />
 										<span class="job-file-name" title={name}>{name}</span>
 									</li>
 								{/each}
@@ -70,7 +70,7 @@
 							<ul class="job-file-list">
 								{#each job.outputs as file, i (i)}
 									<li class="job-file">
-										<span class="file-ico" aria-hidden="true">{fileIcon(file.name)}</span>
+										<FileIcon name={file.name} />
 										<span class="job-file-name" title={file.name}>{file.name}</span>
 										<button
 											class="btn btn--download-sm"

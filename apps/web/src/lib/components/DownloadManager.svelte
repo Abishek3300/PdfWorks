@@ -9,7 +9,8 @@
 
 	import type { OutputFile } from '$lib/engine/types';
 	import type { ProcessingMode } from '$lib/tools/registry';
-	import { formatBytes, fileIcon } from '$lib/util/format';
+	import { formatBytes } from '$lib/util/format';
+	import FileIcon from '$lib/components/FileIcon.svelte';
 	import { downloadOutput, downloadZip } from '$lib/util/download';
 	import { RETENTION_MINUTES } from '$lib/config';
 	import { announce } from '$lib/stores/announcer';
@@ -45,7 +46,7 @@
 			<!-- Single output: a large, centered green download control (Req 3.1). -->
 			<div class="single">
 				<p class="single-meta">
-					<span class="file-ico" aria-hidden="true">{fileIcon(outputs[0].name)}</span>
+					<FileIcon name={outputs[0].name} />
 					<span class="single-name" title={outputs[0].name}>{outputs[0].name}</span>
 					<span class="single-size">{formatBytes(outputs[0].bytes.byteLength)}</span>
 				</p>
@@ -62,7 +63,7 @@
 			<ul class="out-list">
 				{#each outputs as file, i (i)}
 					<li class="out-row">
-						<span class="file-ico" aria-hidden="true">{fileIcon(file.name)}</span>
+						<FileIcon name={file.name} />
 						<span class="out-name" title={file.name}>{file.name}</span>
 						<span class="out-size">{formatBytes(file.bytes.byteLength)}</span>
 						<button class="btn" on:click={() => one(file)}>
@@ -131,11 +132,6 @@
 	.single-size {
 		color: var(--ink-soft);
 		font-size: 0.88rem;
-	}
-	.file-ico {
-		flex: none;
-		font-size: 1.1rem;
-		line-height: 1;
 	}
 	.btn--download {
 		display: block;

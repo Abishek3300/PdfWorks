@@ -10,7 +10,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { SourceItem } from '$lib/workspace/files';
 	import type { ProcessingMode, ToolDescriptor } from '$lib/tools/registry';
-	import { formatBytes, fileIcon } from '$lib/util/format';
+	import { formatBytes } from '$lib/util/format';
+	import FileIcon from '$lib/components/FileIcon.svelte';
 	import { MAX_FILE_SIZE, MAX_BATCH_COUNT } from '$lib/config';
 
 	export let tool: ToolDescriptor;
@@ -110,7 +111,7 @@
 		<ul class="file-list" aria-label="Added files">
 			{#each items as item (item.id)}
 				<li class="file-row">
-					<span class="file-ico" aria-hidden="true">{fileIcon(item.name)}</span>
+					<FileIcon name={item.name} />
 					<span class="file-name" title={item.name}>{item.name}</span>
 					<span class="file-size">{formatBytes(item.size)}</span>
 					{#if item.carried}
@@ -212,11 +213,6 @@
 		border: 1px solid var(--border);
 		border-radius: var(--radius-sm);
 		background: var(--surface);
-	}
-	.file-ico {
-		flex: none;
-		font-size: 1.1rem;
-		line-height: 1;
 	}
 	.file-name {
 		flex: 1;

@@ -73,6 +73,31 @@ export function fileIcon(name: string): string {
 	}
 }
 
+/**
+ * A real logo URL (served from /formats) for file types that have one, else
+ * null so callers can fall back to the emoji `fileIcon`. Pure.
+ */
+export function fileIconSrc(name: string): string | null {
+	switch (fileExtension(name)) {
+		case 'pdf':
+			return '/formats/pdf.png';
+		case 'xls':
+		case 'xlsx':
+			return '/formats/excel.png';
+		case 'ppt':
+		case 'pptx':
+			return '/formats/powerpoint.png';
+		case 'html':
+		case 'htm':
+			return '/formats/html.png';
+		case 'md':
+		case 'markdown':
+			return '/formats/markdown.png';
+		default:
+			return null;
+	}
+}
+
 /** Uppercased file-type label from the extension, or 'FILE' when none. Pure. */
 export function fileTypeLabel(name: string): string {
 	const ext = fileExtension(name);
