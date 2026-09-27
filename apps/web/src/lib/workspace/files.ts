@@ -72,6 +72,9 @@ export function validateAdditions(
 	const errors: string[] = [];
 	const accepted: SourceItem[] = [];
 	let count = existing.length;
+	// Single-file tools cap at one Source_File; only Merge, JPG to PDF, and Scan
+	// to PDF accept a batch (Req 2.x).
+	const maxSources = tool.multiFile ? MAX_BATCH_COUNT : 1;
 
 	for (const item of candidates) {
 		const ext = fileExtension(item.name);
@@ -89,8 +92,16 @@ export function validateAdditions(
 			);
 			continue;
 		}
-		if (count >= MAX_BATCH_COUNT) {
-			errors.push(`You can add up to ${MAX_BATCH_COUNT} files per job. Extra files were not added.`);
+		if (count >= maxSources) {
+			if (maxSources === 1) {
+				errors.push(
+					`${tool.label} works on a single file. Remove the current file to choose a different one.`
+				);
+			} else {
+				errors.push(
+					`You can add up to ${MAX_BATCH_COUNT} files per job. Extra files were not added.`
+				);
+			}
 			break;
 		}
 		accepted.push(item);

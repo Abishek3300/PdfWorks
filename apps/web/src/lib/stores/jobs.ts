@@ -6,6 +6,7 @@
 
 import { writable, derived, get, type Readable } from 'svelte/store';
 import type { ProcessingMode, ToolId } from '../tools/registry';
+import type { OutputFile } from '../engine/types';
 
 export type JobPhase = 'queued' | 'running' | 'succeeded' | 'failed';
 
@@ -19,6 +20,10 @@ export interface JobRecord {
 	progress?: number;
 	/** Failure reason surfaced to the User (Req 33.3). */
 	error?: string;
+	/** Original Source_File name(s) that fed this Job, for the panel's summary. */
+	sourceNames?: string[];
+	/** Produced Output_Files, set on success so the panel can offer downloads. */
+	outputs?: OutputFile[];
 	startedAt: number;
 }
 
@@ -45,6 +50,7 @@ export function startJob(input: {
 	mode: ProcessingMode;
 	phase?: JobPhase;
 	progress?: number;
+	sourceNames?: string[];
 }): string {
 	const id = nextId();
 	const record: JobRecord = {
@@ -54,6 +60,7 @@ export function startJob(input: {
 		mode: input.mode,
 		phase: input.phase ?? 'running',
 		progress: input.progress,
+		sourceNames: input.sourceNames,
 		startedAt: Date.now()
 	};
 	store.update((list) => [record, ...list]);
@@ -63,6 +70,11 @@ export function startJob(input: {
 /** Patch a Job record by id. */
 export function updateJob(id: string, patch: Partial<Omit<JobRecord, 'id'>>): void {
 	store.update((list) => list.map((j) => (j.id === id ? { ...j, ...patch } : j)));
+}
+
+/** Attach the produced Output_Files to a Job so the panel can offer downloads. */
+export function setJobOutputs(id: string, outputs: OutputFile[]): void {
+	updateJob(id, { outputs });
 }
 
 /** Remove a Job record (e.g. when the User dismisses it). */

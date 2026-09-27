@@ -207,6 +207,9 @@
 				{toolId === 'RemovePages' ? 'Pages to remove' : 'Pages to extract'}
 			</label>
 			<input id="pages" type="text" placeholder="e.g. 1, 3, 5-8" bind:value={pagesText} on:input={onPagesInput} />
+			{#if toolId === 'RemovePages' && (state.pages?.length ?? 0) === 0}
+				<p class="hint hint--note">Make sure at least one page remains after removal.</p>
+			{/if}
 			<p class="hint">Select individual pages and ranges. {#if pageCount}Pages 1–{pageCount}.{/if}</p>
 		</div>
 	{/if}
@@ -448,6 +451,10 @@
 	}
 	.hint--error {
 		color: var(--danger);
+	}
+	.hint--note {
+		font-weight: 500;
+		color: var(--ink);
 	}
 	.radio,
 	.checkbox {

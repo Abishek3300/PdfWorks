@@ -5,6 +5,8 @@
 	// User running several tools in one session sees every job's progress.
 
 	import { jobs, removeJob, type JobRecord } from '$lib/stores/jobs';
+	import { fileIcon } from '$lib/util/format';
+	import { downloadOutput, downloadZip } from '$lib/util/download';
 
 	function phaseLabel(job: JobRecord): string {
 		switch (job.phase) {
@@ -49,6 +51,46 @@
 							<span class="job-error">{job.error}</span>
 						{/if}
 					</div>
+					{#if job.sourceNames && job.sourceNames.length > 0}
+						<div class="job-files">
+							<span class="job-files-label">Original:</span>
+							<ul class="job-file-list">
+								{#each job.sourceNames as name}
+									<li class="job-file">
+										<span class="file-ico" aria-hidden="true">{fileIcon(name)}</span>
+										<span class="job-file-name" title={name}>{name}</span>
+									</li>
+								{/each}
+							</ul>
+						</div>
+					{/if}
+					{#if job.phase === 'succeeded' && job.outputs && job.outputs.length > 0}
+						<div class="job-files">
+							<span class="job-files-label">Result:</span>
+							<ul class="job-file-list">
+								{#each job.outputs as file, i (i)}
+									<li class="job-file">
+										<span class="file-ico" aria-hidden="true">{fileIcon(file.name)}</span>
+										<span class="job-file-name" title={file.name}>{file.name}</span>
+										<button
+											class="btn btn--download-sm"
+											on:click={() => downloadOutput(file)}
+										>
+											Download<span class="sr-only"> {file.name}</span>
+										</button>
+									</li>
+								{/each}
+							</ul>
+							{#if job.outputs.length > 1}
+								<button
+									class="btn btn--download-sm zip"
+									on:click={() => job.outputs && downloadZip(job.outputs)}
+								>
+									Download all (ZIP)
+								</button>
+							{/if}
+						</div>
+					{/if}
 					{#if job.phase === 'succeeded' || job.phase === 'failed'}
 						<button class="btn btn--ghost dismiss" on:click={() => removeJob(job.id)}>
 							Dismiss<span class="sr-only"> {job.toolLabel} job</span>
@@ -105,6 +147,53 @@
 	}
 	.job--failed .job-status {
 		color: var(--danger);
+	}
+	.job-files {
+		grid-column: 1 / -1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		font-size: 0.85rem;
+	}
+	.job-files-label {
+		color: var(--ink-soft);
+		font-weight: 600;
+	}
+	.job-file-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+	.job-file {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.file-ico {
+		flex: none;
+		font-size: 1rem;
+		line-height: 1;
+	}
+	.job-file-name {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.btn--download-sm {
+		flex: none;
+		background: var(--accent);
+		color: var(--accent-ink);
+		border-color: var(--accent);
+		padding: 0.25rem 0.6rem;
+		font-size: 0.8rem;
+		min-height: 32px;
+	}
+	.btn--download-sm.zip {
+		align-self: flex-start;
 	}
 	.bar {
 		flex: 1;

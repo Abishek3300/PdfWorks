@@ -38,3 +38,43 @@ export function fileExtension(name: string): string {
 export function isSupportedFormat(name: string, tool: ToolDescriptor): boolean {
 	return tool.supportedFormats.includes(fileExtension(name));
 }
+
+/**
+ * A decorative emoji glyph representing a file's type, chosen from its
+ * extension. Purely visual — callers should render it with `aria-hidden`. Pure.
+ */
+export function fileIcon(name: string): string {
+	switch (fileExtension(name)) {
+		case 'pdf':
+			return '📕';
+		case 'doc':
+		case 'docx':
+			return '📘';
+		case 'xls':
+		case 'xlsx':
+			return '📗';
+		case 'ppt':
+		case 'pptx':
+			return '📙';
+		case 'jpg':
+		case 'jpeg':
+		case 'png':
+			return '🖼️';
+		case 'md':
+		case 'markdown':
+			return '📝';
+		case 'zip':
+			return '🗜️';
+		case 'html':
+		case 'htm':
+			return '🌐';
+		default:
+			return '📄';
+	}
+}
+
+/** Uppercased file-type label from the extension, or 'FILE' when none. Pure. */
+export function fileTypeLabel(name: string): string {
+	const ext = fileExtension(name);
+	return ext ? ext.toUpperCase() : 'FILE';
+}

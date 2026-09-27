@@ -9,12 +9,15 @@ import type { ToolId } from '../tools/registry';
 import type {
 	EngineToolId,
 	ToolOptions,
+	OutputFile,
 	Level,
 	Angle,
 	Orientation,
 	Margin,
 	Position
 } from '../engine/types';
+import { fileExtension } from '../util/format';
+import { sanitizeFileName } from '../util/sanitize';
 
 /** Loose per-tool option state maintained by the option panels. */
 export interface ToolOptionState {
@@ -205,4 +208,90 @@ export function buildEngineOptions(toolId: ToolId, state: ToolOptionState, sourc
 
 function clampInt(value: number, min: number, max: number): number {
 	return Math.max(min, Math.min(max, Math.round(value)));
+}
+
+/**
+ * Per-tool operation suffix applied to renamed Output_Files (Improvement 1).
+ * The word describes what the tool did, so a source `report.pdf` becomes e.g.
+ * `report_removed.pdf` through Remove Pages.
+ */
+const OPERATION_SUFFIX: Record<ToolId, string> = {
+	// Organize
+	Merge: 'merged',
+	Split: 'split',
+	RemovePages: 'removed',
+	ExtractPages: 'extracted',
+	Organize: 'organized',
+	// Scan & Optimize
+	ScanToPdf: 'scanned',
+	OptimizePdf: 'optimized',
+	CompressPdf: 'compressed',
+	// Convert to PDF
+	JpgToPdf: 'converted',
+	MarkdownToPdf: 'document',
+	WordToPdf: 'converted',
+	PptToPdf: 'converted',
+	ExcelToPdf: 'converted',
+	HtmlToPdf: 'converted',
+	// Convert from PDF
+	PdfToJpg: 'page',
+	PdfToMarkdown: 'markdown',
+	PdfToWord: 'converted',
+	PdfToPptx: 'converted',
+	PdfToExcel: 'converted',
+	PdfToPdfA: 'pdfa',
+	// Edit
+	Rotate: 'rotated',
+	AddPageNumbers: 'numbered',
+	AddWatermark: 'watermarked',
+	Crop: 'cropped',
+	EditPdf: 'edited',
+	PdfForms: 'form'
+};
+
+/**
+ * Fallback base names for tools that have no uploaded Source_File to derive a
+ * name from (e.g. Markdown to PDF types content, HTML to PDF fetches a URL).
+ */
+const FALLBACK_BASE: Partial<Record<ToolId, string>> = {
+	MarkdownToPdf: 'document',
+	HtmlToPdf: 'webpage'
+};
+
+/** Strip the trailing `.<ext>` from a file name, yielding just the base. */
+function baseNameOf(name: string): string {
+	const ext = fileExtension(name);
+	if (ext === '') return name;
+	return name.slice(0, name.length - (ext.length + 1));
+}
+
+/**
+ * Rename engine Output_Files to `<originalBaseName>_<operation><ext>`
+ * (Improvement 1). The base name comes from the FIRST Source_File; tools with
+ * no source fall back to a sensible name (or the engine output's own base).
+ * Each output keeps its ORIGINAL extension. Multiple outputs get a `_<n>`
+ * index (starting at 1) so they stay distinguishable and unique. Final names
+ * are sanitized to stay path-safe. Pure.
+ */
+export function renameOutputs(
+	toolId: ToolId,
+	sourceNames: string[],
+	outputs: OutputFile[]
+): OutputFile[] {
+	const suffix = OPERATION_SUFFIX[toolId] ?? 'output';
+	const firstSource = sourceNames.find((n) => n && n.trim() !== '');
+	const multiple = outputs.length > 1;
+
+	return outputs.map((output, i) => {
+		const ext = fileExtension(output.name);
+		const dotExt = ext === '' ? '' : `.${ext}`;
+		// Base: from the first source, else a per-tool fallback, else the
+		// engine output's own base name.
+		const base = firstSource
+			? baseNameOf(firstSource)
+			: FALLBACK_BASE[toolId] ?? baseNameOf(output.name) ?? 'file';
+
+		const stem = multiple ? `${base}_${suffix}_${i + 1}` : `${base}_${suffix}`;
+		return { ...output, name: sanitizeFileName(`${stem}${dotExt}`) };
+	});
 }

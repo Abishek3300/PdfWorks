@@ -10,7 +10,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { SourceItem } from '$lib/workspace/files';
 	import type { ProcessingMode, ToolDescriptor } from '$lib/tools/registry';
-	import { formatBytes } from '$lib/util/format';
+	import { formatBytes, fileIcon } from '$lib/util/format';
 	import { MAX_FILE_SIZE, MAX_BATCH_COUNT } from '$lib/config';
 
 	export let tool: ToolDescriptor;
@@ -32,6 +32,9 @@
 	let inputEl: HTMLInputElement;
 
 	const accept = tool.supportedFormats.map((f) => `.${f}`).join(',');
+
+	// Only Merge, JPG to PDF, and Scan to PDF accept a batch (Req 2.x).
+	$: allowMultiple = tool.multiFile === true;
 
 	function pick() {
 		inputEl?.click();
@@ -81,13 +84,13 @@
 		<p class="dz-sub">or <span class="dz-link">browse your device</span></p>
 		<p class="dz-formats">
 			Accepts {tool.supportedFormats.map((f) => f.toUpperCase()).join(', ')} · up to
-			{formatBytes(MAX_FILE_SIZE)} each · {MAX_BATCH_COUNT} files max
+			{formatBytes(MAX_FILE_SIZE)} each · {allowMultiple ? `${MAX_BATCH_COUNT} files max` : 'one file at a time'}
 		</p>
 		<input
 			bind:this={inputEl}
 			class="sr-only"
 			type="file"
-			multiple
+			multiple={allowMultiple}
 			{accept}
 			on:change={onInputChange}
 			tabindex="-1"
@@ -107,6 +110,7 @@
 		<ul class="file-list" aria-label="Added files">
 			{#each items as item (item.id)}
 				<li class="file-row">
+					<span class="file-ico" aria-hidden="true">{fileIcon(item.name)}</span>
 					<span class="file-name" title={item.name}>{item.name}</span>
 					<span class="file-size">{formatBytes(item.size)}</span>
 					{#if item.carried}
@@ -208,6 +212,11 @@
 		border: 1px solid var(--border);
 		border-radius: var(--radius-sm);
 		background: var(--surface);
+	}
+	.file-ico {
+		flex: none;
+		font-size: 1.1rem;
+		line-height: 1;
 	}
 	.file-name {
 		flex: 1;

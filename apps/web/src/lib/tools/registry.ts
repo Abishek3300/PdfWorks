@@ -71,6 +71,8 @@ export interface ToolDescriptor {
 	minSources?: number;
 	/** True when the tool can produce more than one Output_File (Req 3.2, 18.3). */
 	producesMultiple?: boolean;
+	/** True when the tool accepts more than one Source_File. Only Merge, JPG to PDF, and Scan to PDF do (Req 2.x). */
+	multiFile?: boolean;
 }
 
 /**
@@ -88,7 +90,8 @@ export const TOOL_REGISTRY: readonly ToolDescriptor[] = [
 		label: 'Merge PDF',
 		capability: 'Client_Capable',
 		supportedFormats: ['pdf'],
-		minSources: 2
+		minSources: 2,
+		multiFile: true
 	},
 	{
 		id: 'Split',
@@ -127,7 +130,8 @@ export const TOOL_REGISTRY: readonly ToolDescriptor[] = [
 		category: 'ScanOptimize',
 		label: 'Scan to PDF',
 		capability: 'Server_Only',
-		supportedFormats: ['jpg', 'jpeg', 'png']
+		supportedFormats: ['jpg', 'jpeg', 'png'],
+		multiFile: true
 	},
 	{
 		id: 'OptimizePdf',
@@ -150,7 +154,8 @@ export const TOOL_REGISTRY: readonly ToolDescriptor[] = [
 		category: 'ConvertTo',
 		label: 'JPG to PDF',
 		capability: 'Client_Capable',
-		supportedFormats: ['jpg', 'jpeg']
+		supportedFormats: ['jpg', 'jpeg'],
+		multiFile: true
 	},
 	{
 		id: 'MarkdownToPdf',

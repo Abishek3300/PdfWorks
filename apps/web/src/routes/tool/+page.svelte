@@ -20,7 +20,7 @@
 	import { TOOL_DESCRIPTIONS } from '$lib/config';
 	import { createPrivacyResolution } from '$lib/stores/privacy';
 	import { announce } from '$lib/stores/announcer';
-	import { startJob, updateJob } from '$lib/stores/jobs';
+	import { startJob, updateJob, setJobOutputs } from '$lib/stores/jobs';
 	import {
 		itemFromFile,
 		itemFromBytes,
@@ -29,7 +29,7 @@
 		largestSize,
 		type SourceItem
 	} from '$lib/workspace/files';
-	import { defaultOptions, buildEngineOptions, toEngineToolId, type ToolOptionState } from '$lib/workspace/options';
+	import { defaultOptions, buildEngineOptions, toEngineToolId, renameOutputs, type ToolOptionState } from '$lib/workspace/options';
 	import { runClientSide } from '$lib/engine';
 	import type { OutputFile } from '$lib/engine/types';
 	import { formatBytes, percentReduction } from '$lib/util/format';
@@ -130,12 +130,11 @@
 	$: needsFallbackConfirm = $resolution.requiresServerFallbackConfirm && !fallbackConfirmed;
 	$: canRun = !!tool && hasEnoughFiles && phase !== 'running' && !needsFallbackConfirm;
 
-	// Merge requires >= 2 (Req 4.4); Remove Pages requires >= 1 retained (Req 6.2).
+	// Merge requires >= 2 (Req 4.4). The Remove Pages reminder now lives in the
+	// options panel, shown until the user types the pages to remove.
 	$: guardMessage = (() => {
 		if (!tool) return null;
 		if (tool.id === 'Merge' && items.length < 2) return 'Add at least two PDF files to merge.';
-		if (tool.id === 'RemovePages' && items.length > 0 && (options.pages?.length ?? 0) > 0)
-			return 'Make sure at least one page remains after removal.';
 		return null;
 	})();
 
@@ -146,7 +145,14 @@
 		outputs = [];
 		const mode = $resolution.mode;
 
-		const jobId = startJob({ toolId, toolLabel: tool.label, mode, phase: 'running', progress: 0 });
+		const jobId = startJob({
+			toolId,
+			toolLabel: tool.label,
+			mode,
+			phase: 'running',
+			progress: 0,
+			sourceNames: items.map((i) => i.name)
+		});
 
 		if (mode === 'Client_Side') {
 			phase = 'running';
@@ -157,9 +163,10 @@
 				const bytes = await Promise.all(items.map(readItemBytes));
 				const names = items.map((i) => i.name);
 				const result = await runClientSide(toEngineToolId(toolId), engineOptions, bytes, names);
-				outputs = result;
+				outputs = renameOutputs(toolId, items.map((i) => i.name), result);
 				phase = 'done';
 				updateJob(jobId, { phase: 'succeeded', progress: 100 });
+				setJobOutputs(jobId, outputs);
 				announce(`Done. ${result.length} file${result.length === 1 ? '' : 's'} ready to download.`);
 			} catch (err) {
 				runError = err instanceof Error ? err.message : String(err);
@@ -247,10 +254,11 @@
 						return { name: ref.name, bytes };
 					})
 				);
-				outputs = downloaded;
+				outputs = renameOutputs(toolId, items.map((i) => i.name), downloaded);
 				phase = 'done';
 				progress = 100;
 				updateJob(jobId, { phase: 'succeeded', progress: 100 });
+				setJobOutputs(jobId, outputs);
 				announce(
 					`Done. ${downloaded.length} file${downloaded.length === 1 ? '' : 's'} ready to download.`
 				);
