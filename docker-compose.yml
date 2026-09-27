@@ -1,0 +1,67 @@
+# docker-compose wiring for local development / self-hosting.
+#
+# Services:
+#   - backend : the Axum service (built from docker/backend.Dockerfile)
+#   - redis   : Job queue, status, and rate-limit counters (Req 31.4, 42)
+#   - minio   : S3-compatible File_Store, encrypted-at-rest object storage with
+#               a lifecycle rule matching Retention_Period (Req 44.1, 32.2)
+#
+# Image tags are pinned (Req 45.1) and scanned by the Dependency_Scanner in CI
+# (Req 45.2/45.3). Secrets shown here are LOCAL DEV DEFAULTS only.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    image: pdf-tools-suite/backend:0.1.0
+    depends_on:
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      BACKEND_ADDR: 0.0.0.0:8080
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+      S3_BUCKET: pdf-jobs
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      RUST_LOG: info
+    ports:
+      - "8080:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4.1-bookworm
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:RELEASE.2024-09-13T20-26-02Z
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  minio-data:

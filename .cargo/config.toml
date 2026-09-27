@@ -1,0 +1,20 @@
+# Workspace Cargo configuration.
+#
+# The `x86_64-pc-windows-gnu` toolchain is used for local builds/tests because the
+# MSVC host here has no linker. lopdf's transitive `getrandom` (v0.4) defaults to a
+# Windows `bcryptprimitives.dll` backend that is generated with `raw-dylib`; the
+# GNU toolchain's bundled `dlltool` cannot create that import library in this
+# environment. Selecting getrandom's CPU `rdrand` backend for the windows-gnu
+# target sidesteps the import-library generation entirely without adding any
+# native/system-linking dependency. This flag is scoped to windows-gnu only, so
+# the wasm32 target continues to use lopdf's `wasm_js` (browser) entropy backend.
+[target.x86_64-pc-windows-gnu]
+rustflags = ['--cfg', 'getrandom_backend="rdrand"']
+
+# On wasm32 (the browser Client_Side_Processing target), getrandom v0.4 requires
+# its backend to be selected explicitly. The `wasm_js` backend draws entropy from
+# the Web Crypto API, which is available inside the Web Worker that hosts the
+# engine. The `lopdf` `wasm_js` cargo feature (see crates/pdf-engine/Cargo.toml)
+# pairs with this cfg.
+[target.wasm32-unknown-unknown]
+rustflags = ['--cfg', 'getrandom_backend="wasm_js"']

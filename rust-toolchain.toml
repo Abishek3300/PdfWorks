@@ -1,0 +1,13 @@
+# Pin the toolchain for reproducible builds (Req 45.1 spirit: pinned build inputs).
+#
+# The GNU host is used here because this project targets Linux containers in
+# production (see Dockerfile) and the GNU toolchain bundles its own linker,
+# avoiding a hard dependency on a locally installed MSVC toolchain during
+# cross-compilation to wasm32-unknown-unknown.
+#
+# On a Linux CI/build host (the canonical build environment, see the Dockerfile
+# and .github/workflows/ci.yml) the default `x86_64-unknown-linux-gnu` host is
+# used and no extra system linker setup is required.
+[toolchain]
+channel = "1.98.1"
+targets = ["wasm32-unknown-unknown"]
