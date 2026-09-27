@@ -33,7 +33,7 @@
 	import { runClientSide } from '$lib/engine';
 	import type { OutputFile } from '$lib/engine/types';
 	import { formatBytes, percentReduction } from '$lib/util/format';
-	import { isBackendConfigured } from '$lib/api/client';
+	import { isBackendConfigured, createJob, getJobStatus, fetchOutput } from '$lib/api/client';
 
 	import UploadManager from '$lib/components/UploadManager.svelte';
 	import DownloadManager from '$lib/components/DownloadManager.svelte';
@@ -170,8 +170,8 @@
 			return;
 		}
 
-		// Server_Side path. The backend is not wired yet (Task 21); if not
-		// configured, show a clear pending state instead of a doomed request.
+		// Server_Side path. When no backend is configured, show a clear pending
+		// state instead of a doomed request (keeps the app navigable in preview).
 		if (!isBackendConfigured()) {
 			phase = 'server-pending';
 			updateJob(jobId, { phase: 'queued' });
@@ -179,10 +179,90 @@
 			return;
 		}
 
-		// When a backend IS configured, the full upload/poll/download flow lands
-		// with Task 21. Kept minimal here to avoid blocking the build.
-		phase = 'server-pending';
-		updateJob(jobId, { phase: 'queued' });
+		// A backend IS configured: run the real upload -> poll -> download flow
+		// (Req 2.5, 2.6, 2.7, 31.3, 32.1, 33.3, 43.x). Bytes travel only over the
+		// encrypted connection; the Job_Token gates every server file access.
+		phase = 'running';
+		progress = 0;
+		announce(`Uploading ${tool.label} to secure server processing.`);
+		try {
+			const engineOptions = buildEngineOptions(toolId, options, items.length);
+			// Build File[] from the current sources (uploaded or carried bytes).
+			const uploadFiles = await Promise.all(
+				items.map(async (item) => {
+					if (item.file) return item.file;
+					const bytes = await readItemBytes(item);
+					return new File([bytes], item.name, { type: 'application/octet-stream' });
+				})
+			);
+
+			const { jobId: remoteJobId, jobToken } = await createJob({
+				tool: toEngineToolId(toolId),
+				options: engineOptions,
+				files: uploadFiles,
+				onProgress: (percent) => {
+					progress = percent;
+					updateJob(jobId, { phase: 'running', progress: percent });
+				}
+			});
+
+			updateJob(jobId, { phase: 'running', progress: 100 });
+
+			// Poll until the Job succeeds or fails, with a sane overall timeout.
+			const POLL_INTERVAL_MS = 800;
+			const OVERALL_TIMEOUT_MS = 120_000;
+			const deadline = Date.now() + OVERALL_TIMEOUT_MS;
+			const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+			// eslint-disable-next-line no-constant-condition
+			while (true) {
+				if (Date.now() > deadline) {
+					throw new Error(
+						'Server processing timed out. The connection may have been interrupted — you can retry.'
+					);
+				}
+
+				const status = await getJobStatus(remoteJobId, jobToken);
+
+				if (status.phase === 'queued' || status.phase === 'running') {
+					if (typeof status.progress === 'number') {
+						progress = status.progress;
+						updateJob(jobId, { phase: status.phase, progress: status.progress });
+					} else {
+						updateJob(jobId, { phase: status.phase });
+					}
+					await sleep(POLL_INTERVAL_MS);
+					continue;
+				}
+
+				if (status.phase === 'failed') {
+					throw new Error(status.error ?? 'Server processing failed.');
+				}
+
+				// 'succeeded': download each Output_File's bytes into memory.
+				const refs = status.outputs ?? [];
+				const downloaded = await Promise.all(
+					refs.map(async (ref): Promise<OutputFile> => {
+						const bytes = await fetchOutput(remoteJobId, ref.index, jobToken);
+						return { name: ref.name, bytes };
+					})
+				);
+				outputs = downloaded;
+				phase = 'done';
+				progress = 100;
+				updateJob(jobId, { phase: 'succeeded', progress: 100 });
+				announce(
+					`Done. ${downloaded.length} file${downloaded.length === 1 ? '' : 's'} ready to download.`
+				);
+				return;
+			}
+		} catch (err) {
+			runError = err instanceof Error ? err.message : String(err);
+			phase = 'idle';
+			progress = null;
+			updateJob(jobId, { phase: 'failed', error: runError });
+			announce(`${tool.label} failed: ${runError}`);
+		}
 	}
 
 	function confirmFallback() {
@@ -316,7 +396,11 @@
 	{#if phase === 'running'}
 		<div class="processing card" role="status" aria-live="polite">
 			<span class="spinner" aria-hidden="true"></span>
-			<span>Processing on your device…</span>
+			<span
+				>{$resolution.mode === 'Client_Side'
+					? 'Processing on your device…'
+					: 'Processing securely on the server…'}</span
+			>
 			{#if progress != null}
 				<span
 					class="bar"

@@ -144,6 +144,29 @@ export function outputDownloadUrl(jobId: string, index: number): string {
 	return `${base}/api/jobs/${encodeURIComponent(jobId)}/outputs/${index}`;
 }
 
+/**
+ * Fetch one Output_File's bytes into memory using the token-scoped download URL
+ * (Req 3.3, 43.3). The Job_Token is sent in the X-Job-Token header so server
+ * file access stays gated; bytes travel only over the encrypted connection
+ * (Req 32.1). Rejects with a retryable error on connection interruption (Req 2.7).
+ */
+export async function fetchOutput(
+	jobId: string,
+	index: number,
+	jobToken: string
+): Promise<Uint8Array> {
+	let res: Response;
+	try {
+		res = await fetch(outputDownloadUrl(jobId, index), {
+			headers: { 'X-Job-Token': jobToken }
+		});
+	} catch {
+		throw new Error('The connection was interrupted during download. You can retry.');
+	}
+	if (!res.ok) throw new Error(`Could not download output (status ${res.status}).`);
+	return new Uint8Array(await res.arrayBuffer());
+}
+
 /** Request immediate secure deletion of a Job's files (Req 32.3). */
 export async function deleteJob(jobId: string, jobToken: string): Promise<void> {
 	const base = requireBase();
