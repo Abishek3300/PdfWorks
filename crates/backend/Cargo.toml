@@ -1,0 +1,49 @@
+[package]
+name = "backend"
+version = "0.1.0"
+edition = "2021"
+description = "Axum backend service for the PDF Tools Suite (Server_Side_Processing plane)."
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "backend"
+path = "src/lib.rs"
+
+[[bin]]
+name = "backend"
+path = "src/main.rs"
+
+[dependencies]
+# The backend links the engine natively (rlib). Server-only concerns
+# (LibreOffice/OCR/pdfium subprocesses, Redis, S3) are wired in later tasks.
+pdf-engine = { path = "../pdf-engine" }
+
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+axum = { workspace = true }
+tower = { workspace = true }
+tower-http = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+redis = { workspace = true }
+aes-gcm = { workspace = true }
+async-trait = { workspace = true }
+
+[dev-dependencies]
+# Property-based tests for Properties 17, 18, 22, 23 (Tasks 15.3, 15.6, 15.7,
+# 17.2). Shares the workspace pin; `fork`/`timeout` stay disabled (same GNU
+# dlltool constraint documented in the workspace manifest) — the backend
+# property tests are pure and deterministic.
+proptest = { workspace = true }
+tokio = { workspace = true }
+# Used only by tests to synthesize minimal/malicious PDFs for the
+# Content_Scanner wiring test. Pinned via the workspace.
+lopdf = { workspace = true }
+# Cross-cutting integration tests (Task 22.2) drive the Axum router with
+# `tower::ServiceExt::oneshot`; the `util` feature provides `oneshot`. Dev-only,
+# so the shared engine's dependency surface is unaffected. Pinned EXACT
+# (Req 45.1). `http-body-util` collects the response body for assertions and is
+# already in the lockfile transitively via axum.
+tower = { version = "=0.5.1", features = ["util"] }
+http-body-util = "=0.1.5"
