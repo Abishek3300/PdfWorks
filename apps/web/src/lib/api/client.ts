@@ -21,6 +21,7 @@
 // only over the encrypted connection (Req 32.1). No token is ever logged.
 // ---------------------------------------------------------------------------
 
+import { env } from '$env/dynamic/public';
 import type { ProcessingMode } from '../tools/registry';
 
 /** Metadata about one server-stored Output_File (shown before download, Req 3.4). */
@@ -46,13 +47,16 @@ export interface JobStatus {
 }
 
 /**
- * The configured Backend base URL, read from the static build-time public env
+ * The configured Backend base URL, read from SvelteKit's dynamic public env
  * (`PUBLIC_API_BASE_URL`). Empty when no backend is wired yet.
+ *
+ * `$env/dynamic/public` exposes all `PUBLIC_`-prefixed vars at runtime, which is
+ * the correct choice for adapter-static plus a value that may differ per
+ * deployment. Vite's default `envPrefix` is `VITE_`, so `import.meta.env` would
+ * never surface `PUBLIC_`-prefixed vars — hence the SvelteKit env API here.
  */
 function backendBaseUrl(): string {
-	// Vite exposes statically-replaced public vars on import.meta.env.
-	const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
-	return (env?.PUBLIC_API_BASE_URL ?? '').trim();
+	return (env.PUBLIC_API_BASE_URL ?? '').trim();
 }
 
 /**
