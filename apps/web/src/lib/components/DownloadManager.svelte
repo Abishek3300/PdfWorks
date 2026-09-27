@@ -66,12 +66,17 @@
 						<FileIcon name={file.name} />
 						<span class="out-name" title={file.name}>{file.name}</span>
 						<span class="out-size">{formatBytes(file.bytes.byteLength)}</span>
-						<button class="btn" on:click={() => one(file)}>
+						<button class="btn out-dl" on:click={() => one(file)}>
 							Download<span class="sr-only"> {file.name}</span>
 						</button>
 					</li>
 				{/each}
 			</ul>
+
+			<div class="all-row all-row--bottom">
+				<span>Grab everything in one file</span>
+				<button class="btn btn--download" on:click={all}>Download all (ZIP)</button>
+			</div>
 		{/if}
 
 		{#if downloaded}
@@ -108,6 +113,14 @@
 		padding-bottom: 1rem;
 		margin-bottom: 1rem;
 		border-bottom: 1px solid var(--border);
+	}
+	.all-row--bottom {
+		border-top: 1px solid var(--border);
+		border-bottom: none;
+		padding-top: 1rem;
+		margin-top: 1rem;
+		padding-bottom: 0;
+		margin-bottom: 0;
 	}
 	.single {
 		display: flex;
@@ -154,14 +167,15 @@
 	.out-row {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
+		gap: 0.5rem;
 		padding: 0.6rem 0.75rem;
 		border: 1px solid var(--border);
 		border-radius: var(--radius-sm);
 		background: var(--surface-2);
 	}
 	.out-name {
-		flex: 1;
+		flex: 0 1 auto;
+		min-width: 0;
 		font-weight: 600;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -170,6 +184,9 @@
 	.out-size {
 		color: var(--ink-soft);
 		font-size: 0.88rem;
+		flex: none;
+	}
+	.out-dl {
 		flex: none;
 	}
 	.retry-hint,
