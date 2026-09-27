@@ -1,0 +1,268 @@
+/* Feature: pdf-tools-suite — global stylesheet.
+ * A small, hand-written design system: warm neutrals, one accent, generous
+ * spacing, and WCAG AA contrast (Req 35.4). Responsive tokens live here so
+ * layouts stay consistent across the shell and workspaces (Req 34). */
+
+:root {
+	/* Palette — chosen for >= 4.5:1 text contrast on the surfaces they pair with. */
+	--bg: #f7f6f3;
+	--surface: #ffffff;
+	--surface-2: #f0eee9;
+	--border: #dcd8d0;
+	--ink: #1c1a17; /* body text on --surface / --bg: ~15:1 */
+	--ink-soft: #5b564e; /* secondary text: ~7:1 on --surface */
+	--accent: #1f5c46; /* deep green; white text ~7:1 */
+	--accent-ink: #ffffff;
+	--accent-soft: #e6f0ea;
+	--danger: #a4232f; /* white text ~6:1 */
+	--danger-soft: #fbe9ea;
+	--focus: #0b64c4;
+
+	--radius: 12px;
+	--radius-sm: 8px;
+	--shadow: 0 1px 2px rgba(28, 26, 23, 0.06), 0 8px 24px rgba(28, 26, 23, 0.06);
+	--space: 1rem;
+	--maxw: 72rem;
+	--font: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: var(--font);
+	color: var(--ink);
+	background: var(--bg);
+	line-height: 1.55;
+	font-size: 16px;
+	-webkit-text-size-adjust: 100%;
+	overflow-x: hidden; /* never scroll sideways >= 320px (Req 34.4) */
+}
+
+h1,
+h2,
+h3 {
+	line-height: 1.2;
+	margin: 0 0 0.5em;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+a {
+	color: var(--accent);
+}
+
+/* Visible, high-contrast focus for keyboard operation (Req 35.2). */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+	outline: 3px solid var(--focus);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* Screen-reader-only utility for text alternatives and live regions (Req 35.3, 35.5). */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.skip-link {
+	position: absolute;
+	left: 0.5rem;
+	top: -3rem;
+	background: var(--accent);
+	color: var(--accent-ink);
+	padding: 0.6rem 1rem;
+	border-radius: var(--radius-sm);
+	z-index: 50;
+	transition: top 0.15s ease;
+}
+.skip-link:focus {
+	top: 0.5rem;
+}
+
+.container {
+	width: 100%;
+	max-width: var(--maxw);
+	margin: 0 auto;
+	padding: 0 clamp(1rem, 4vw, 2rem);
+}
+
+/* Buttons — touch-friendly min target (Req 34.3). */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 44px;
+	padding: 0.55rem 1.1rem;
+	font: inherit;
+	font-weight: 600;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--border);
+	background: var(--surface);
+	color: var(--ink);
+	cursor: pointer;
+	transition: background 0.12s ease, border-color 0.12s ease, transform 0.05s ease;
+}
+.btn:hover {
+	background: var(--surface-2);
+}
+.btn:active {
+	transform: translateY(1px);
+}
+.btn--primary {
+	background: var(--accent);
+	color: var(--accent-ink);
+	border-color: var(--accent);
+}
+.btn--primary:hover {
+	background: #184735;
+}
+.btn--danger {
+	background: var(--surface);
+	color: var(--danger);
+	border-color: var(--danger);
+}
+.btn--danger:hover {
+	background: var(--danger-soft);
+}
+.btn:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.btn--ghost {
+	border-color: transparent;
+	background: transparent;
+}
+.btn--ghost:hover {
+	background: var(--surface-2);
+}
+
+/* Form controls */
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	margin-bottom: 1rem;
+}
+.field > label {
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+.field .hint {
+	color: var(--ink-soft);
+	font-size: 0.85rem;
+}
+input[type='text'],
+input[type='url'],
+input[type='number'],
+select,
+textarea {
+	font: inherit;
+	min-height: 44px;
+	padding: 0.5rem 0.7rem;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	background: var(--surface);
+	color: var(--ink);
+	width: 100%;
+}
+textarea {
+	min-height: 8rem;
+	resize: vertical;
+}
+
+.card {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+}
+
+/* Chips / badges */
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.78rem;
+	font-weight: 600;
+	padding: 0.2rem 0.55rem;
+	border-radius: 999px;
+	background: var(--surface-2);
+	color: var(--ink-soft);
+}
+.badge--device {
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+.badge--server {
+	background: #eef2f7;
+	color: #34506e;
+}
+
+/* Notice/alert blocks */
+.notice {
+	border-radius: var(--radius-sm);
+	padding: 0.75rem 0.9rem;
+	font-size: 0.92rem;
+	border: 1px solid var(--border);
+	background: var(--surface-2);
+	color: var(--ink);
+}
+.notice--info {
+	background: var(--accent-soft);
+	border-color: #bcd8ca;
+	color: #123a2b;
+}
+.notice--warn {
+	background: #fdf3e2;
+	border-color: #ecd3a6;
+	color: #6b4d15;
+}
+.notice--error {
+	background: var(--danger-soft);
+	border-color: #eab8bc;
+	color: #7a1922;
+}
+
+/* Responsive grid used by the catalog and workspace (Req 34.1/34.2). */
+.grid {
+	display: grid;
+	gap: 1.25rem;
+}
+@media (min-width: 768px) {
+	.grid--tools {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media (min-width: 1024px) {
+	.grid--tools {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.workspace-layout {
+		grid-template-columns: minmax(0, 1fr) 22rem;
+		align-items: start;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition: none !important;
+	}
+}
