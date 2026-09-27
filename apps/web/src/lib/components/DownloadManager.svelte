@@ -19,13 +19,17 @@
 	/** Optional size/reduction summary shown above the list (Req 10.4, 11.4). */
 	export let summary: string | null = null;
 
+	let downloaded = false;
+
 	function one(file: OutputFile) {
 		downloadOutput(file);
 		announce(`Downloading ${file.name}.`);
+		downloaded = true;
 	}
 	function all() {
 		downloadZip(outputs);
 		announce(`Downloading a ZIP of ${outputs.length} files.`);
+		downloaded = true;
 	}
 </script>
 
@@ -69,7 +73,9 @@
 			</ul>
 		{/if}
 
-		<p class="retry-hint">A download didn’t finish? Just press Download again.</p>
+		{#if downloaded}
+			<p class="retry-hint">Downloaded. Need it again? Just press Download.</p>
+		{/if}
 
 		{#if mode === 'Server_Side'}
 			<p class="retention">
