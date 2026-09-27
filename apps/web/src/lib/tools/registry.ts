@@ -318,6 +318,30 @@ export function getToolsByCategory(): ToolCategoryGroup[] {
 	}));
 }
 
+/**
+ * Tools that can accept a set of carried Output_File extensions as input,
+ * grouped by category (Req 36.1, 36.3). A tool qualifies only when it accepts
+ * EVERY carried extension. Empty/blank extensions are ignored. When no valid
+ * extension is present, returns no groups.
+ */
+export function toolsAcceptingExtensions(exts: Iterable<string>): ToolCategoryGroup[] {
+	const wanted = new Set<string>();
+	for (const ext of exts) {
+		const normalized = ext.trim().toLowerCase();
+		if (normalized) wanted.add(normalized);
+	}
+	if (wanted.size === 0) return [];
+
+	return getToolsByCategory()
+		.map((group) => ({
+			...group,
+			tools: group.tools.filter((tool) =>
+				[...wanted].every((ext) => tool.supportedFormats.includes(ext))
+			)
+		}))
+		.filter((group) => group.tools.length > 0);
+}
+
 /** Look up a single descriptor by id. */
 export function getTool(id: ToolId): ToolDescriptor | undefined {
 	return TOOL_REGISTRY.find((tool) => tool.id === id);

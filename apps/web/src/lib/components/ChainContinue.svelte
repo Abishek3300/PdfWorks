@@ -9,14 +9,12 @@
 
 	import { createEventDispatcher } from 'svelte';
 	import type { OutputFile } from '$lib/engine/types';
-	import { getToolsByCategory, type ToolId } from '$lib/tools/registry';
+	import { toolsAcceptingExtensions, type ToolId } from '$lib/tools/registry';
 	import { fileExtension } from '$lib/util/format';
 
 	export let outputs: OutputFile[] = [];
 
 	const dispatch = createEventDispatcher<{ continue: { toolId: ToolId; indices: number[] } }>();
-
-	const groups = getToolsByCategory();
 
 	// Default: carry every output.
 	let selected = new Set<number>(outputs.map((_, i) => i));
@@ -29,13 +27,8 @@
 	}
 
 	// Only offer tools that accept the carried outputs' formats.
-	$: carriedExts = new Set([...selected].map((i) => fileExtension(outputs[i]?.name ?? '')));
-	$: compatible = groups
-		.map((g) => ({
-			...g,
-			tools: g.tools.filter((t) => [...carriedExts].every((ext) => t.supportedFormats.includes(ext)))
-		}))
-		.filter((g) => g.tools.length > 0);
+	$: carriedExts = [...selected].map((i) => fileExtension(outputs[i]?.name ?? ''));
+	$: compatible = toolsAcceptingExtensions(carriedExts);
 
 	function go() {
 		if (targetTool === '' || selected.size === 0) return;
