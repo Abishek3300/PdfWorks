@@ -8,6 +8,20 @@ use std::net::SocketAddr;
 
 #[tokio::main]
 async fn main() {
+    // `--health-check`: a minimal self-check used by the Docker HEALTHCHECK
+    // (docker/backend.Dockerfile). It confirms the binary links and the native
+    // engine is reachable, prints `ok`, and exits 0 without binding a socket so
+    // the container runtime can probe liveness cheaply. TLS stays terminated at
+    // the proxy (Req 38.1) — this flag never touches the network.
+    if std::env::args().any(|a| a == "--health-check") {
+        if backend::health_check() {
+            println!("ok");
+            std::process::exit(0);
+        }
+        eprintln!("health check failed");
+        std::process::exit(1);
+    }
+
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::try_from_default_env()

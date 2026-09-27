@@ -68,7 +68,10 @@ proptest = { version = "=1.5.0", default-features = false, features = ["std", "b
 
 # Native-only backend dependencies (never referenced by pdf-engine).
 tokio = { version = "=1.40.0", features = ["full"] }
-axum = "=0.7.5"
+# `multipart` enables the `axum::extract::Multipart` extractor used by the
+# `POST /api/jobs` intake to receive `tool` + `options` + uploaded `files[]`
+# (design §8 API intake). Pinned exact (Req 45.1).
+axum = { version = "=0.7.5", features = ["multipart"] }
 tower = "=0.5.1"
 tower-http = { version = "=0.5.2", features = ["cors", "limit", "trace"] }
 tracing = "=0.1.40"

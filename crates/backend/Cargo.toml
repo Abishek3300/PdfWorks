@@ -29,6 +29,9 @@ tracing-subscriber = { workspace = true }
 redis = { workspace = true }
 aes-gcm = { workspace = true }
 async-trait = { workspace = true }
+# Platform CSPRNG for per-object GCM nonces on the intake path (Req 44.1). Same
+# exact pin as the engine (Req 45.1); the native backend is selected per target.
+getrandom = { workspace = true }
 
 [dev-dependencies]
 # Property-based tests for Properties 17, 18, 22, 23 (Tasks 15.3, 15.6, 15.7,

@@ -35,6 +35,7 @@
 #![forbid(unsafe_code)]
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
 
+pub mod api;
 pub mod config;
 pub mod convert;
 pub mod dispatch;
@@ -62,8 +63,10 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
 
-use crate::config::Config;
+use crate::api::Services;
+use crate::config::{Config, MAX_REQUEST_BODY_BYTES};
 use crate::logging::{AnomalyConfig, SecurityLog};
+use crate::ratelimit::{InMemoryCounterStore, LimitedAction, RateLimiter};
 
 /// Shared application state threaded through handlers.
 pub struct AppState {
@@ -71,28 +74,38 @@ pub struct AppState {
     pub config: Config,
     /// Security_Log sink (Req 46).
     pub security_log: SecurityLog,
+    /// Runtime services (File_Store, queue, executors) — the wired pipeline.
+    pub services: Services,
+    /// Per-client Rate_Limiter for Job submissions + uploads (Req 42.1-42.3).
+    pub rate_limiter: RateLimiter<InMemoryCounterStore>,
 }
 
 impl AppState {
     /// Build state from a [`Config`], creating a Security_Log gated by the
-    /// `SECURITY_LOG_OPERATOR_TOKEN` env var (Req 46.3).
+    /// `SECURITY_LOG_OPERATOR_TOKEN` env var (Req 46.3) and assembling the
+    /// runtime services from the environment.
     #[must_use]
     pub fn new(config: Config) -> Self {
         let operator_token =
             std::env::var("SECURITY_LOG_OPERATOR_TOKEN").unwrap_or_else(|_| "operator".to_string());
+        let services = Services::from_env(&config);
+        let rate_limiter = RateLimiter::new(InMemoryCounterStore::new(), config.rate_limit);
         Self {
             config,
             security_log: SecurityLog::new(operator_token, AnomalyConfig::default()),
+            services,
+            rate_limiter,
         }
     }
 }
 
-/// Build the Axum [`Router`] with the Security_Gateway middleware applied
-/// (Req 38, 42.4, 50.3).
+/// Build the Axum [`Router`] with the API routes mounted behind the
+/// Security_Gateway + Rate_Limiter middleware (Req 38, 42.1-42.4, 50.3).
 #[must_use]
 pub fn build_router(state: Arc<AppState>) -> Router {
     Router::new()
         .route("/healthz", get(healthz))
+        .merge(api::api_routes())
         .layer(middleware::from_fn_with_state(
             state.clone(),
             security_gateway_layer,
@@ -129,6 +142,49 @@ async fn security_gateway_layer(
         }
     };
 
+    // Enforce the maximum request body size from the declared Content-Length
+    // before the body is read, bounding an oversized upload (Req 42.4). The
+    // multipart extractor additionally bounds each streamed field.
+    if let Some(len) = content_length(&headers) {
+        if len > MAX_REQUEST_BODY_BYTES {
+            state.security_log.record(logging::SecurityEvent {
+                client_ref: SecurityLog::client_ref(origin.as_deref().unwrap_or("unknown")),
+                kind: logging::SecurityEventKind::RequestRejected,
+                reason: error::ApiError::BodyTooLarge {
+                    max_bytes: MAX_REQUEST_BODY_BYTES,
+                }
+                .code()
+                .to_string(),
+            });
+            let resp = error::ApiError::BodyTooLarge {
+                max_bytes: MAX_REQUEST_BODY_BYTES,
+            }
+            .into_response();
+            return with_cors(resp, &cors);
+        }
+    }
+
+    // Rate-limit Job submissions per client (Req 42.1, 42.3). Only the intake
+    // POST counts against the Job-submission budget; status/result reads are
+    // not throttled here so a client can poll a running Job.
+    if is_job_submission(&request) {
+        let client = SecurityLog::client_ref(origin.as_deref().unwrap_or("unknown"));
+        let now = now_ms();
+        let allowed = state
+            .rate_limiter
+            .check(&client, LimitedAction::JobSubmission, now)
+            .await
+            .unwrap_or(true);
+        if !allowed {
+            state.security_log.record(logging::SecurityEvent {
+                client_ref: client,
+                kind: logging::SecurityEventKind::RequestRejected,
+                reason: error::ApiError::RateLimited.code().to_string(),
+            });
+            return with_cors(error::ApiError::RateLimited.into_response(), &cors);
+        }
+    }
+
     let mut response = next.run(request).await;
 
     // Attach security + CORS headers to the outgoing response.
@@ -141,6 +197,42 @@ async fn security_gateway_layer(
     response
 }
 
+/// Attach CORS headers to an already-built (short-circuit) response so a
+/// rejection still carries the allowlist echo the browser expects.
+fn with_cors(
+    mut resp: Response,
+    cors: &[(axum::http::header::HeaderName, axum::http::header::HeaderValue)],
+) -> Response {
+    for (name, value) in gateway::security_headers() {
+        resp.headers_mut().insert(name, value);
+    }
+    for (name, value) in cors {
+        resp.headers_mut().insert(name.clone(), value.clone());
+    }
+    resp
+}
+
+/// The declared request body size from the `Content-Length` header, if any.
+fn content_length(headers: &HeaderMap) -> Option<u64> {
+    headers
+        .get(axum::http::header::CONTENT_LENGTH)
+        .and_then(|v| v.to_str().ok())
+        .and_then(|s| s.parse::<u64>().ok())
+}
+
+/// Whether a request is a Job submission (`POST /api/jobs`) for rate-limiting.
+fn is_job_submission(request: &axum::extract::Request) -> bool {
+    request.method() == axum::http::Method::POST && request.uri().path() == "/api/jobs"
+}
+
+/// Current wall-clock time in milliseconds since the Unix epoch.
+fn now_ms() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0)
+}
+
 /// Entry point used by the binary; kept in the library so it is unit-covered.
 ///
 /// # Errors
@@ -150,6 +242,9 @@ async fn security_gateway_layer(
 pub async fn run(addr: std::net::SocketAddr) -> Result<(), String> {
     let config = Config::from_env()?;
     let state = Arc::new(AppState::new(config));
+    // Drain the dispatch queue on a background worker so the intake path never
+    // blocks on processing (Req 31.4).
+    api::spawn_worker(state.clone());
     let app = build_router(state);
 
     let listener = tokio::net::TcpListener::bind(addr)
@@ -164,6 +259,17 @@ pub async fn run(addr: std::net::SocketAddr) -> Result<(), String> {
 #[must_use]
 pub fn status_ok() -> StatusCode {
     StatusCode::OK
+}
+
+/// Minimal self-check backing the `--health-check` CLI flag and the Docker
+/// HEALTHCHECK. Confirms the native engine links (a Job_Token can be issued
+/// from the CSPRNG) without binding a socket or touching the network. Returns
+/// `true` when the process is healthy.
+#[must_use]
+pub fn health_check() -> bool {
+    // Issuing a token exercises the engine link + the platform entropy source;
+    // a failure here means the runtime is not healthy.
+    pdf_engine::generate_job_token().is_ok()
 }
 
 #[cfg(test)]
