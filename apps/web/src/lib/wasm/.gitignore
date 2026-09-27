@@ -1,0 +1,8 @@
+# Feature: pdf-tools-suite (Task 7.1) — generated wasm-bindgen bundle artifacts.
+# These are produced by the bundle-generation step (see README.md) and should
+# not be committed; the hand-written pdf_engine.d.ts IS committed.
+pdf_engine.js
+pdf_engine_bg.wasm
+pdf_engine_bg.wasm.d.ts
+# Raw (pre-bindgen) cdylib copied from the cargo build for CI convenience.
+pdf_engine_raw.wasm
