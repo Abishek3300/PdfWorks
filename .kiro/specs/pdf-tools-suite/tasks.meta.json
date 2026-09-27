@@ -1,0 +1,1004 @@
+{
+  "pbtResults": {
+    "8.3 Write property test for search filtering (fast-check)": {
+      "status": "passed",
+      "lastRunTimestamp": 1790411475737
+    },
+    "2.3 Write property test for Merge page concatenation": {
+      "status": "passed",
+      "lastRunTimestamp": 1790413149377
+    },
+    "2.4 Write property test for Split partitioning": {
+      "status": "passed",
+      "lastRunTimestamp": 1790413150380
+    },
+    "2.5 Write property test for out-of-range split rejection": {
+      "status": "passed",
+      "lastRunTimestamp": 1790413151748
+    },
+    "2.6 Write property test for Remove Pages complement": {
+      "status": "passed",
+      "lastRunTimestamp": 1790413152966
+    },
+    "2.7 Write property test for Extract Pages count and order": {
+      "status": "passed",
+      "lastRunTimestamp": 1790413154102
+    },
+    "2.8 Write property test for Organize permutation": {
+      "status": "passed",
+      "lastRunTimestamp": 1790413155251
+    }
+  },
+  "executionHistory": {
+    "1. Scaffold the monorepo, Rust workspace, and Docker packaging": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409115930
+      },
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409138461
+      }
+    ],
+    "2.1 Define the engine's public API and data models": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409116496
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790410830498
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790411142903
+      }
+    ],
+    "2.2 Implement Merge, Split, Remove Pages, Extract Pages, and Organize": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409116587
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790411151682
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413334412
+      }
+    ],
+    "3.1 Implement Optimize and Compress": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409116669
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413348345
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415027669
+      }
+    ],
+    "3.3 Implement JPG to PDF and PDF to JPG": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409116739
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413348407
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415028534
+      }
+    ],
+    "3.7 Implement Markdown to PDF and PDF to Markdown": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409116818
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413348928
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415029720
+      }
+    ],
+    "4.1 Implement Rotate, Add Page Numbers, Add Watermark, and Crop": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409116906
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415037677
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415594678
+      }
+    ],
+    "4.4 Implement Edit PDF and PDF Forms element application": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409116987
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415038627
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415595714
+      }
+    ],
+    "5. Checkpoint - engine core complete": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117083
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516268206
+      }
+    ],
+    "6.1 Implement filename sanitization": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117177
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415608427
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790416894467
+      }
+    ],
+    "6.4 Implement the PDF Content_Scanner active-content handling": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117271
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415609602
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790416895501
+      }
+    ],
+    "6.6 Implement the Job_Token generator and access checker": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117337
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415610688
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790416893045
+      }
+    ],
+    "7.1 Add the WASM binding layer and build the WASM bundle": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117428
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790417238213
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418369696
+      }
+    ],
+    "7.2 Implement the Web Worker host for on-device processing": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117516
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418370629
+      }
+    ],
+    "8.1 Define the tool registry": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117610
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790411152510
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413335274
+      }
+    ],
+    "8.2 Implement label substring search filtering": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117703
+      },
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413336561
+      }
+    ],
+    "9.1 Implement the app shell, category navigation, and tool catalog": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117787
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418377628
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419486971
+      }
+    ],
+    "9.2 Implement the Privacy Mode state machine and on-device indicator": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117863
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418378790
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419488418
+      }
+    ],
+    "10.1 Implement the Upload_Manager": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409117953
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418379979
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419489714
+      }
+    ],
+    "10.2 Implement the Download_Manager": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118073
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418381138
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419490870
+      }
+    ],
+    "10.3 Implement per-tool option panels and result displays": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118156
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418382561
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419491717
+      }
+    ],
+    "11.1 Wire tool workspaces to client-side execution and progress": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118224
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418383810
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419493142
+      }
+    ],
+    "11.2 Implement chained operations": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118314
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418384904
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419494520
+      }
+    ],
+    "11.3 Implement empty-state and multi-job/interruption UI handling": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118413
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418386142
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419495665
+      }
+    ],
+    "12.1 Implement responsive layouts": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118502
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418387570
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419496853
+      }
+    ],
+    "12.2 Implement accessibility features": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118602
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418388483
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419497931
+      }
+    ],
+    "13. Checkpoint - client plane complete": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118683
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516269383
+      }
+    ],
+    "14.1 Implement TLS, security headers, CORS, body limit, and rate limiting": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118794
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419505828
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516318629
+      }
+    ],
+    "15.1 Implement Job intake, Job_Token issuance, and Redis queue": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118882
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419507208
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516319556
+      }
+    ],
+    "15.2 Implement the Validator": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409118971
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419508605
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516320976
+      }
+    ],
+    "15.4 Wire the Content_Scanner into intake": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119083
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419509535
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516321863
+      }
+    ],
+    "15.5 Implement the URL_Fetcher with SSRF guards": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119191
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419510933
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516323631
+      }
+    ],
+    "16.1 Implement the encrypted File_Store addressed by Job_Token": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119267
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419512463
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516324208
+      }
+    ],
+    "16.2 Implement the Retention_Service": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119375
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419513401
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516325783
+      }
+    ],
+    "17.1 Implement the Sandbox worker harness": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119480
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419514853
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516326982
+      }
+    ],
+    "17.3 Wire the native engine dispatch and error surfacing": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119581
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419515673
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516328271
+      }
+    ],
+    "18. Checkpoint - server core complete": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119676
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516270418
+      }
+    ],
+    "19.1 Integrate LibreOffice headless for Office↔PDF conversions": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119777
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516264612
+      }
+    ],
+    "19.2 Integrate OCRmyPDF/Tesseract for Scan to PDF with OCR": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119873
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516265733
+      }
+    ],
+    "19.3 Integrate pdfium for PDF/A conversion and rendering": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409119955
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516266844
+      }
+    ],
+    "20.1 Implement privacy-preserving security logging": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409120052
+      },
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419516962
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516329413
+      }
+    ],
+    "21.1 Connect gateway → API → queue → sandbox → store → download": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409120123
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516277401
+      }
+    ],
+    "23. Final checkpoint - ensure all tests pass": [
+      {
+        "executionId": "89969969-6517-4064-a611-a2226beedbbf",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790409120195
+      },
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516271577
+      }
+    ],
+    "2. Build the shared `pdf-engine` crate core surface and page-algebra tools": [
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413334488
+      }
+    ],
+    "8. Implement the shared tool registry and TypeScript search": [
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790413336643
+      }
+    ],
+    "3. Implement size/quality, image, and Markdown engine tools": [
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415029844
+      }
+    ],
+    "4. Implement rotation and per-page annotation engine tools": [
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790415595781
+      }
+    ],
+    "6. Implement shared security helpers with property coverage": [
+      {
+        "executionId": "308f8b05-c05c-4ce2-abf0-0c41cbdd2b37",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790416895585
+      }
+    ],
+    "7. Compile the engine to WASM and integrate the client processing plane": [
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790418370684
+      }
+    ],
+    "9. Build the SvelteKit UI shell, navigation, and Privacy Mode routing": [
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419488500
+      }
+    ],
+    "10. Implement upload, download, and per-tool option panels": [
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419491783
+      }
+    ],
+    "11. Wire client-side job execution, chaining, and interruption handling": [
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419495720
+      }
+    ],
+    "12. Implement responsive layout and accessibility": [
+      {
+        "executionId": "e5ecd937-6a0c-4bad-9930-05782f61a5ea",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790419497987
+      }
+    ],
+    "14. Implement the Security_Gateway": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516205795
+      }
+    ],
+    "15. Implement the Axum API intake, validation, and scanning": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516206776
+      }
+    ],
+    "16. Implement File_Store, Retention_Service, and access control": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516208107
+      }
+    ],
+    "17. Implement sandboxed server execution and dispatch": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516209613
+      }
+    ],
+    "19. Implement Server_Only conversion tools": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516211276
+      }
+    ],
+    "20. Implement Security_Log and anomaly recording": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516211885
+      }
+    ],
+    "21. Wire the end-to-end server flow": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516212820
+      }
+    ],
+    "22. Cross-cutting integration, performance, security, and accessibility tests": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516213931
+      }
+    ],
+    "2.3 Write property test for Merge page concatenation": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516220002
+      }
+    ],
+    "2.4 Write property test for Split partitioning": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516221453
+      }
+    ],
+    "2.5 Write property test for out-of-range split rejection": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516222565
+      }
+    ],
+    "2.6 Write property test for Remove Pages complement": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516223806
+      }
+    ],
+    "2.7 Write property test for Extract Pages count and order": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516225187
+      }
+    ],
+    "2.8 Write property test for Organize permutation": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516226089
+      }
+    ],
+    "3.2 Write property test for Optimize/Compress invariants": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516227479
+      }
+    ],
+    "3.4 Write property test for JPG to PDF page count": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516228431
+      }
+    ],
+    "3.5 Write property test for PDF to JPG image count": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516229813
+      }
+    ],
+    "3.6 Write property test for JPG round-trip count preservation": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516231287
+      }
+    ],
+    "3.8 Write property test for Markdown round-trip structure": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516232177
+      }
+    ],
+    "4.2 Write property test for rotation correctness and 4×90° identity": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516233630
+      }
+    ],
+    "4.3 Write property test for per-page annotation invariants": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516235014
+      }
+    ],
+    "6.2 Write property test for unique output names": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516235943
+      }
+    ],
+    "6.3 Write property test for path-traversal-safe filenames": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516237385
+      }
+    ],
+    "6.5 Write property test for active-content removal or rejection": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516238918
+      }
+    ],
+    "6.7 Write property test for Job_Token entropy and uniqueness": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516239743
+      }
+    ],
+    "6.8 Write property test for token-gated, expiry-bound access": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516241164
+      }
+    ],
+    "7.3 Write property test for no source-byte transmission in Client_Side_Processing": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516242584
+      }
+    ],
+    "8.3 Write property test for search filtering (fast-check)": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516243937
+      }
+    ],
+    "15.3 Write property test for archive-bomb rejection": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516244880
+      }
+    ],
+    "15.6 Write property test for private-range rejection": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516246309
+      }
+    ],
+    "15.7 Write property test for URL scheme allowlist": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516247751
+      }
+    ],
+    "17.2 Write property test for cross-Job scratch isolation": [
+      {
+        "executionId": "4fbe6cee-3502-476a-b69c-9e42f77df150",
+        "chatSessionId": "sess_b104cb6f-a187-4433-be7b-b3c76dcfcb58",
+        "timestamp": 1790516248763
+      }
+    ]
+  }
+}
