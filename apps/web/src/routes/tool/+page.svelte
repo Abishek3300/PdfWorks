@@ -33,6 +33,7 @@
 	import { runClientSide } from '$lib/engine';
 	import type { OutputFile } from '$lib/engine/types';
 	import { formatBytes, percentReduction } from '$lib/util/format';
+	import { contentTypeFor } from '$lib/util/download';
 	import { isBackendConfigured, createJob, getJobStatus, fetchOutput } from '$lib/api/client';
 
 	import UploadManager from '$lib/components/UploadManager.svelte';
@@ -194,12 +195,15 @@
 		announce(`Uploading ${tool.label} to secure server processing.`);
 		try {
 			const engineOptions = buildEngineOptions(toolId, options, items.length);
-			// Build File[] from the current sources (uploaded or carried bytes).
+			// Always materialize a fresh in-memory File from the source bytes. Never
+			// forward the original File handle: a re-selected/downloaded File can have a
+			// detached blob, producing a truncated multipart body the server rejects.
 			const uploadFiles = await Promise.all(
 				items.map(async (item) => {
-					if (item.file) return item.file;
 					const bytes = await readItemBytes(item);
-					return new File([bytes], item.name, { type: 'application/octet-stream' });
+					// Copy into a fresh ArrayBuffer the Blob fully owns.
+					const copy = bytes.slice();
+					return new File([copy], item.name, { type: contentTypeFor(item.name) });
 				})
 			);
 
